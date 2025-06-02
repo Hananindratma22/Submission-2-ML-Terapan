@@ -9,6 +9,7 @@ Namun, tantangan seperti *cold start* (ketika data pengguna atau item baru sanga
 Studi sebelumnya menunjukkan bahwa integrasi antara pendekatan content-based dan collaborative filtering dapat meningkatkan akurasi serta kepuasan pengguna terhadap hasil rekomendasi [2]. Oleh karena itu, memahami kekuatan dan keterbatasan masing-masing pendekatan menjadi langkah penting menuju pengembangan sistem rekomendasi yang lebih optimal.
 
 Referensi:
+
 [1] A. Gomez-Uribe dan N. Hunt, "The Netflix Recommender System: Algorithms, Business Value, and Innovation," *ACM Transactions on Management Information Systems*, vol. 6, no. 4, pp. 1–19, Dec. 2016.
 
 [2] J. A. Smith dan M. K. Johnson, "An Integrated Approach to Movie Recommendation: Collaborative Filtering and Content-Based Filtering Fusion," *International Journal of Creative Research Thoughts (IJCRT)*, vol. 12, no. 2, pp. 962–970, Feb. 2024.
