@@ -272,10 +272,12 @@ Di mana:
 Berikut adalah hasil evaluasi model yang divisualisasikan dalam dua grafik:
 
 #### Evaluasi Loss 
+![Image](https://github.com/user-attachments/assets/b201912f-4032-4a0f-af1f-23ed7a99ae86)
 
 Grafik menunjukkan *loss* dan *val_loss* serta MSE pada training dan validasi. RMSE training menurun hingga mendekati 0.49, sementara RMSE validasi stabil di sekitar 0.655.
  
 #### Evaluasi RMSE
+![Image](https://github.com/user-attachments/assets/0cda0d02-e0c5-415d-9b71-b8b12f4993b0)
 
 Grafik RMSE training mencapai sekitar 0.02 dan RMSE validasi turun ke kisaran 0.285. Ini menunjukkan perbaikan signifikan dalam generalisasi dan akurasi prediksi model.
 
