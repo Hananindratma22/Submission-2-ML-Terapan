@@ -100,9 +100,10 @@ Sebelum ekplorasi dilakukan, **dilakukan merge** pada keempat dataset. Kemudian,
     | 3  | title                    | 569            | object  |
     | 4  | genres                   | 569            | object  |
     | 5  | tag                      | 569            | object  |
+   
     Berdasarkan pengecekan pada tipe data, diperoleh tipe data userId dan movieId adalah integer, rating adalah float, serta variabel lain memiliki tipe data object.
 
-2. **Cek Missing Value**  
+3. **Cek Missing Value**  
     ```python
     df.isnull().sum().sum()
     ```
@@ -111,7 +112,7 @@ Sebelum ekplorasi dilakukan, **dilakukan merge** pada keempat dataset. Kemudian,
 
     Tidak ditemukan *missing value* pada data.
 
-3. **Cek Duplikasi**  
+4. **Cek Duplikasi**  
     ```python
     df.duplicated().sum()
     ```
@@ -119,7 +120,7 @@ Sebelum ekplorasi dilakukan, **dilakukan merge** pada keempat dataset. Kemudian,
     ```np.int64(0)```
    Tidak ditemukan baris duplikat dalam data rating, sehingga data dapat langsung digunakan untuk training model.
 
-4. **Cek Dimensi Data**  
+5. **Cek Dimensi Data**  
     ```python
     df.shape
     ```
@@ -127,7 +128,7 @@ Sebelum ekplorasi dilakukan, **dilakukan merge** pada keempat dataset. Kemudian,
     ```(3476, 6)``` 
     Data memiliki sebanyak 3476 baris dan 6 kolom.
 
-5. **Jumlah Unik User dan Movie**  
+6. **Jumlah Unik User dan Movie**  
     ```python
     df['userId'].nunique()
     df['movieId'].nunique()
