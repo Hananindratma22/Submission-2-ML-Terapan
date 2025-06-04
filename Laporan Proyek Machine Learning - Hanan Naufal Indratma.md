@@ -95,12 +95,12 @@ Sebelum ekplorasi dilakukan, **dilakukan merge** pada keempat dataset. Kemudian,
     Output:
     | No | Column                   | Non-Null Count | Dtype   |
     |----|--------------------------|----------------|---------|
-    | 0  | userId                   | 569            | int64   |
-    | 1  | movieId                  | 569            | int64   |
-    | 2  | rating                   | 569            | float64 |
-    | 3  | title                    | 569            | object  |
-    | 4  | genres                   | 569            | object  |
-    | 5  | tag                      | 569            | object  |
+    | 0  | userId                   | 3476           | int64   |
+    | 1  | movieId                  | 3476           | int64   |
+    | 2  | rating                   | 3476           | float64 |
+    | 3  | title                    | 3476           | object  |
+    | 4  | genres                   | 3476           | object  |
+    | 5  | tag                      | 3476           | object  |
    
     Berdasarkan pengecekan pada tipe data, diperoleh tipe data userId dan movieId adalah integer, rating adalah float, serta variabel lain memiliki tipe data object.
 
@@ -188,11 +188,15 @@ Pada tahap ini, dilakukan serangkaian proses untuk mempersiapkan data sebelum ma
 - Mendapatkan beberapa informasi baru seperti jumlah user, jumlah resto, minimal rating, dan maksimal rating.
 - **Alasan:** List akan digunakan pada tahap pemodelan, disamping itu encoding model pembelajaran mesin memerlukan representasi numerik.
 
-#### 2. Pembagian Data
+#### 2. Normalisasi Fitur Rating
+- Pada tahap ini, dilakukan normalisasi pada fitur rating.
+- **Alasan:** Tahap ini penting dalam persiapan data untuk model neural network yang akan digunakan agar data memiliki nilai minimum dan maksimum yang sama.
+
+#### 3. Pembagian Data
 - Data dibagi ke dalam `x_train`, `x_val`, `y_train`, dan `y_val` menggunakan teknik split, dengan proporsi training dan validation.
 - **Alasan:** Pembagian ini digunakan untuk melatih dan menguji performa model neural network.
 
-#### 3. Penyesuaian Tipe Data
+#### 4. Penyesuaian Tipe Data
 - Mengonversi `x_train` dan `x_val` ke tipe `int32` dan label `y_train` serta `y_val` ke `float32`.
 - **Alasan:** TensorFlow mengharuskan input dan output memiliki tipe data numerik spesifik agar kompatibel dengan arsitektur model.
 
@@ -206,12 +210,12 @@ Pada tahap ini, sistem rekomendasi dibangun untuk menyelesaikan permasalahan yan
 
 Pendekatan ini merekomendasikan film berdasarkan kemiripan konten film yang telah disukai oleh pengguna. Fitur yang digunakan untuk membandingkan antar film adalah kombinasi antara **genre** dan **tag** yang telah diproses menjadi teks gabungan. Model ini menggunakan metode **TF-IDF Vectorizer** dan **Cosine Similarity** untuk mengukur kesamaan antar film.
 
-**Top 5 Movie Recommendation yang mirip dengan Jumanji:**
-1. *big (1988)*
-2. *harry potter and the sorcerer's stone (2001)*
-3. *tomb raider (2018)*
-4. *toy story (1995)*
-5. *it takes two (1995)*
+**Top 5 Movie Recommendation yang cocok dengan user dengan id 119 (mirip dengan film *john wick: chapter two (2017)*):**
+1. *john wick (2014)*
+2. *hard-boiled (lat sau san taam) (1992)*
+3. *panic room (2002)*
+4. *negotiator, the (1998)*
+5. *butch cassidy and the sundance kid (1969)*
 
 **Kelebihan:**
 - Tidak memerlukan data pengguna lain.
@@ -246,18 +250,34 @@ Dengan menggunakan kedua pendekatan di atas, sistem rekomendasi menjadi lebih ku
 
 ## Evaluation
 
-Pada bagian ini, evaluasi dilakukan untuk mengukur kinerja model *Collaborative Filtering* yang dikembangkan dalam sistem rekomendasi. Evaluasi dilakukan menggunakan metrik yang umum dipakai dalam sistem rekomendasi berbasis rating prediksi.
+Pada bagian ini, evaluasi dilakukan untuk mengukur kinerja model yang dikembangkan dalam sistem rekomendasi. Evaluasi dilakukan menggunakan metrik yang umum dipakai dalam sistem rekomendasi berbasis rating prediksi.
 
 ### Metrik Evaluasi yang Digunakan
 
-Model dievaluasi menggunakan beberapa metrik, yaitu:
+Model content-based filtering dievaluasi menggunakan dua metrik utama, yaitu:
 
-- **Loss**: Mengukur error antara rating aktual dan rating prediksi pada data training, dihitung menggunakan fungsi *Mean Squared Error*.
+- **Precision@k**: Mengukur proporsi item yang direkomendasikan (dari top-*k*) yang benar-benar relevan atau disukai oleh pengguna.
+- **Recall@k**: Mengukur proporsi item relevan (yang disukai pengguna) yang berhasil direkomendasikan dari keseluruhan item relevan yang tersedia.
+
+Model collaborative filtering dievaluasi menggunakan dua metrik utama, yaitu:
+
+- **Loss**: Mengukur error antara rating aktual dan rating prediksi pada data training, dihitung menggunakan fungsi *BinaryCrossentropy*.
 - **Root Mean Squared Error (RMSE)**: Akar kuadrat dari *Mean Squared Error*, yang digunakan untuk mengembalikan error ke satuan asli dari rating. 
 
-Formula loss/MSE adalah sebagai berikut:
+### Rumus Metrik Evaluasi yang Digunakan
 
-$$\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
+Fungsi Precision@k didefinisikan sebagai berikut:
+
+$$\text{Precision@}k = \frac{|\text{Recommended}_k \cap \text{Relevant}|}{k}$$
+
+Fungsi Recall@k didefinisikan sebagai berikut:
+
+$$\text{Recall@}k = \frac{|\text{Recommended}_k \cap \text{Relevant}|}{|\text{Relevant}|}$$
+
+
+Fungsi Binary Crossentropy didefinisikan sebagai:
+
+$$\text{BinaryCrossentropy} = -\frac{1}{n} \sum_{i=1}^{n} \left[y_i \cdot \log(\hat{y}_i) + (1 - y_i) \cdot \log(1 - \hat{y}_i)\right]$$
 
 Formula RMSE adalah sebagai berikut:
 
@@ -265,27 +285,43 @@ $$\text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 }$$
 
 Di mana:
 
-- $$y_i$$ adalah nilai aktual
-- $$\hat{y}_i$$ adalah nilai prediksi
-- $$n$$ adalah jumlah data
+$$\text{Recommended}_k$$ = daftar top-*k* film yang direkomendasikan
+
+$$\text{Relevant}$$ = film-film yang disukai user (misalnya rating ≥ 4)
+
+$$|\cdot|$$ = jumlah item dalam himpunan
+
+$$y_i$$ = nilai aktual
+
+$$\hat{y}_i$$ = nilai prediksi
+
+$$n$$ = jumlah data
 
 ### Hasil Evaluasi
+#### Hasil Evaluasi Content-Based Filtering
+**Precision@5 = 0.20**
 
+**Recall@5 = 0.25**
+
+Berdasarkan hasil evaluasi, nilai **Precision@5** sebesar **0.20** menunjukkan bahwa dari 5 film yang direkomendasikan kepada pengguna, hanya 1 film yang benar-benar relevan atau disukai oleh user. Artinya, tingkat ketepatan sistem dalam memberikan rekomendasi yang sesuai preferensi pengguna masih rendah. Sementara itu, nilai **Recall@5** sebesar **0.25** mengindikasikan bahwa dari total 4 film yang disukai oleh user, hanya 1 film yang berhasil ditangkap atau tercakup dalam daftar rekomendasi. 
+
+#### Hasil Evaluasi Collaborative Filtering
 Berikut adalah hasil evaluasi model yang divisualisasikan dalam dua grafik:
 
-#### Evaluasi Loss 
+##### Evaluasi Loss/Binary Crossentropy
 ![Image](https://github.com/user-attachments/assets/b201912f-4032-4a0f-af1f-23ed7a99ae86)
 
-Grafik menunjukkan *loss* dan *val_loss* serta MSE pada training dan validasi. RMSE training menurun hingga mendekati 0.49, sementara RMSE validasi stabil di sekitar 0.655.
+Grafik menunjukkan *loss* dan *val_loss* pada training dan validasi. Loss training menurun hingga mendekati 0.49, sementara loss validasi stabil di sekitar 0.655.
  
-#### Evaluasi RMSE
+##### Evaluasi RMSE
 ![Image](https://github.com/user-attachments/assets/0cda0d02-e0c5-415d-9b71-b8b12f4993b0)
 
 Grafik RMSE training mencapai sekitar 0.02 dan RMSE validasi turun ke kisaran 0.285. Ini menunjukkan perbaikan signifikan dalam generalisasi dan akurasi prediksi model.
 
 ### Kesimpulan
+Pada Content-Based Filtering, sistem belum mampu secara optimal mencakup sebagian besar preferensi pengguna dalam rekomendasinya. Kedua metrik ini merefleksikan bahwa sistem perlu ditingkatkan, baik dari sisi pemahaman konten maupun cakupan relevansi, untuk menghasilkan rekomendasi yang lebih akurat dan menyeluruh.
 
-Metrik RMSE sangat sesuai untuk sistem rekomendasi berbasis rating karena menggambarkan seberapa jauh prediksi model terhadap rating aktual pengguna. Nilai RMSE yang rendah menandakan bahwa model mampu memberikan prediksi yang akurat dan relevan terhadap preferensi pengguna. Hal ini mungkin dikarenakan data yang dipakai tidak banyak, mengingat data yang terbuang saat penggabungan data cukup banyak.
+Pada Collaborative Filterting, metrik RMSE sangat sesuai untuk sistem rekomendasi berbasis rating karena menggambarkan seberapa jauh prediksi model terhadap rating aktual pengguna. Nilai RMSE yang rendah menandakan bahwa model mampu memberikan prediksi yang akurat dan relevan terhadap preferensi pengguna. Hal ini mungkin dikarenakan data yang dipakai tidak banyak, mengingat data yang terbuang saat penggabungan data cukup banyak.
 
 
 
